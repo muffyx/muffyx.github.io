@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html ng-app="myApp" ng-controller="TestCtrl">
+<head>
+<meta charset="UTF-8">
+<title>{{test.name}}</title>
+
+ <!-- Latest compiled and minified CSS -->
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    
+  <meta name="description" content="{{ test.description}}">
+  <link rel="icon" type="image/png" ng-repeat="icon in icons" href="TestTaskJS1/{{ icon.url }}">
+  <link rel="stylesheet" type="text/css" href="main.css">
+    <style>
+      body {
+        --main-bg-color:  #{{ test.accentColorSecondary }};
+        background-color:  var(--main-bg-color);  
+      }
+
+      h1, h2, h3, h4, h5, h6, p, a {
+        --main-color: #{{ test.accentColor }};
+        color: var( --main-color);
+      }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+            <h2>{{ test.name }}</h2>
+            <h3>{{ test.description }}</h3>
+
+            <ul class="nav nav-tabs">
+              <li class="active"><a data-toggle="tab" href="#home">Home</a></li>
+              <li ng-repeat="category in categories | orderBy: 'positionNumber' "><a data-toggle="tab" href="#{{ category.id }}">{{ category.name }}</a></li>
+            </ul>
+          
+            <div class="tab-content">
+              <!--HOME TAB (all content)-->
+              <div id="home" class="tab-pane fade in active">
+                <h3>HOME</h3>
+                
+                <div class="container" ng-repeat="item in items | orderBy: 'position' ">
+                        <div class="row">
+                            <div class="col-md-7">
+                                <div class="media">
+                                  <div class="media-left" ng-repeat="images in item.gallery_images" ng-show="$first">
+                                      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#all{{ item.id }}">
+                                        <img class="media-object" id="{{ images.id }}" src="TestTaskJS1/{{ images.url }}" alt="{{ images.name }}" height="64px" width="64px">
+                                      </button>
+                                  </div>
+                                  <div class="media-body">
+                                    <h4 class="media-heading">{{ item.title }}</h4>
+                                    {{ item.description }}
+                                  </div>
+                                </div>
+                            </div>
+                            </div>
+                            <br />
+                            <div class="modal fade" id="all{{item.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        &times;
+                                      </button>
+                                      <h3 class="modal-title" id="exampleModalLabel">{{item.title}}</h3>
+                                    </div>
+                                    <div class="modal-body">
+                              
+                                      <div id="Carousel" class="carousel slide col-12 col-offset-2">
+                              
+                                      <div class="carousel-inner">
+                                          <div class="item" ng-class="{'active': $first}" ng-repeat="image in item.gallery_images">
+                                              <img id="{{image.id}}" src="TestTaskJS1/{{ image.url }}" class="img-responsive">
+                                          </div>
+                                      </div>
+                              
+                                      <a class="left carousel-control" href="#Carousel" data-slide="prev">
+                                          <span class="glyphicon glyphicon-chevron-left"></span>
+                                      </a>
+                                      <a class="right carousel-control" href="#Carousel" data-slide="next">
+                                          <span class="glyphicon glyphicon-chevron-right"></span>
+                                      </a>
+                              </div>
+                              <br />
+                              <h3 class="item-title"> {{item.title}}</h3>
+                              <h4>{{item.long_description}}</h4>
+                             
+                              <object  ng-if="item.videoUrl  !=  null" data="http://www.youtube.com/embed/{{item.videoUrl | limitTo: -11}}" class="slide col-12 col-offset-4" align="center"></object>
+                                    </div>
+                                    <div class="modal-footer">
+                                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                </div>
+                <!--HOME TAB (all content)-->
+                   
+              </div>
+              <!--Category Tabs-->
+              <div id="{{ category.id }}" class="tab-pane fade" ng-repeat="category in categories | orderBy: 'positionNumber' ">
+                <h3>{{ category.name }}</h3>
+                <div class="container" ng-repeat=" cat in category.items | orderBy: 'position' ">
+                    <div ng-repeat="id in items" ng-if="id.id == cat">
+                                        <div class="row">
+                                            <div class="col-md-7">
+                                                <div class="media">
+                                                  <div class="media-left" ng-repeat="images in id.gallery_images" ng-show="$first">
+                                                      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#{{ id.id }}">
+                                                        <img class="media-object" id="{{ images.id }}" src="TestTaskJS1/{{ images.url }}" alt="{{ images.name }}" height="64px" width="64px">
+                                                      </button>
+                                                  </div>
+                                                  <div class="media-body">
+                                                    <h4 class="media-heading">{{ id.title }}</h4>
+                                                    {{ id.description }}
+                                                  </div>
+                                                </div>
+                                            </div>
+                                            </div>
+                                            <br />
+                                            <div class="modal fade" id="{{id.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                  <div class="modal-content">
+                                                    <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        &times;
+                                                      </button>
+                                                      <h3 class="modal-title" id="exampleModalLabel">{{id.title}}</h3>
+                                                    </div>
+                                                    <div class="modal-body">
+                                              
+                                                      <div id="Carousel1" class="carousel slide col-12 col-offset-2">
+                                              
+                                                      <div class="carousel-inner">
+                                                          <div class="item" ng-class="{'active': $first}" ng-repeat="img in id.gallery_images">
+                                                              <img id="{{img.id}}" src="TestTaskJS1/{{ img.url }}" class="img-responsive">
+                                                          </div>
+                                                      </div>
+                                              
+                                                      <a class="left carousel-control" href="#Carousel1" data-slide="prev">
+                                                          <span class="glyphicon glyphicon-chevron-left"></span>
+                                                      </a>
+                                                      <a class="right carousel-control" href="#Carousel1" data-slide="next">
+                                                          <span class="glyphicon glyphicon-chevron-right"></span>
+                                                      </a>
+                                              </div>
+                                              <br />
+                                              <h3> {{id.title}}</h3>
+                                              <h4>{{id.long_description}}</h4>
+                                             
+                                              <object  ng-if="id.videoUrl  !=  null" data="http://www.youtube.com/embed/{{id.videoUrl | limitTo: -11}}" class="slide col-12 col-offset-2"></object>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--Category Tabs-->
+
+          
+     <!-- jQuery library -->
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+      <!-- Latest compiled JavaScript -->
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script> 
+      <!-- AngularJS -->
+      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+      <script src="index.js"></script> 
+</body>
+</html>
